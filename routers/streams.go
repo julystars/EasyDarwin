@@ -32,6 +32,7 @@ import (
 func (h *APIHandler) StreamStart(c *gin.Context) {
 	type Form struct {
 		URL               string `form:"url" binding:"required"`
+		DeviceName        string `form:"deviceName"`
 		CustomPath        string `form:"customPath"`
 		TransType         string `form:"transType"`
 		IdleTimeout       int    `form:"idleTimeout"`
@@ -56,6 +57,7 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 		form.CustomPath = "/" + form.CustomPath
 	}
 	client.CustomPath = form.CustomPath
+	client.DeviceName = form.DeviceName
 	switch strings.ToLower(form.TransType) {
 	case "udp":
 		client.TransType = rtsp.TRANS_TYPE_UDP
@@ -81,6 +83,7 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 	// save to db.
 	var stream = models.Stream{
 		URL:               form.URL,
+		DeviceName:        form.DeviceName,
 		CustomPath:        form.CustomPath,
 		IdleTimeout:       form.IdleTimeout,
 		HeartbeatInterval: form.HeartbeatInterval,

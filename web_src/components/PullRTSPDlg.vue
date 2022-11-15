@@ -1,5 +1,12 @@
 <template>
-    <FormDlg title="编辑拉流" @hide="onHide" @show="onShow" @submit="onSubmit" ref="dlg" :disabled="errors.any() || bLoading">     
+    <FormDlg title="编辑拉流" @hide="onHide" @show="onShow" @submit="onSubmit" ref="dlg" :disabled="errors.any() || bLoading"> 
+        <div :class="['form-group', { 'has-error': errors.has('deviceName')}]">
+            <label for="input-device-name" class="col-sm-3 control-label"><span class="text-red">*</span> 监控名称</label>
+            <div class="col-sm-8">
+                <input type="text" id="input-device-name" class="form-control" name="deviceName" data-vv-as="监控名称" v-validate="'required'" v-model.trim="form.deviceName">
+                <span class="help-block">{{errors.first('deviceName')}}</span>
+            </div>
+        </div>     
         <div :class="['form-group', { 'has-error': errors.has('url')}]">
             <label for="input-url" class="col-sm-3 control-label"><span class="text-red">*</span> RTSP地址</label>
             <div class="col-sm-8">
@@ -60,6 +67,7 @@ export default {
         defForm() {
             return {
                 url: '',
+                deviceName: '',
                 customPath: '',
                 transType: 'TCP',
                 idleTimeout: '',

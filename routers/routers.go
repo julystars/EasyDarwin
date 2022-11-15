@@ -124,6 +124,8 @@ func Init() (err error) {
 	}
 
 	{
+		Router.POST("/camera/qry", API.QryCamera)
+
 		api := Router.Group("/api/v1").Use(sessionHandle)
 		api.GET("/login", API.Login)
 		api.GET("/userinfo", API.UserInfo)

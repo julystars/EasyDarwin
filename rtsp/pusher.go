@@ -153,6 +153,10 @@ func (pusher *Pusher) Source() string {
 	return pusher.RTSPClient.URL
 }
 
+func (pusher *Pusher) Name() string {
+	return pusher.RTSPClient.DeviceName
+}
+
 func NewClientPusher(client *RTSPClient) (pusher *Pusher) {
 	pusher = &Pusher{
 		RTSPClient:     client,

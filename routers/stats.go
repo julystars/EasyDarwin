@@ -59,15 +59,16 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 			continue
 		}
 		pushers = append(pushers, map[string]interface{}{
-			"id":        pusher.ID(),
-			"url":       rtsp,
-			"path":      pusher.Path(),
-			"source":    pusher.Source(),
-			"transType": pusher.TransType(),
-			"inBytes":   pusher.InBytes(),
-			"outBytes":  pusher.OutBytes(),
-			"startAt":   utils.DateTime(pusher.StartAt()),
-			"onlines":   len(pusher.GetPlayers()),
+			"id":         pusher.ID(),
+			"deviceName": pusher.Name(),
+			"url":        rtsp,
+			"path":       pusher.Path(),
+			"source":     pusher.Source(),
+			"transType":  pusher.TransType(),
+			"inBytes":    pusher.InBytes(),
+			"outBytes":   pusher.OutBytes(),
+			"startAt":    utils.DateTime(pusher.StartAt()),
+			"onlines":    len(pusher.GetPlayers()),
 		})
 	}
 	pr := utils.NewPageResult(pushers)
@@ -75,6 +76,34 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 		pr.Sort(form.Sort, form.Order)
 	}
 	pr.Slice(form.Start, form.Limit)
+	c.IndentedJSON(200, pr)
+}
+
+func (h *APIHandler) QryCamera(c *gin.Context) {
+	form := utils.NewPageForm()
+	if err := c.Bind(form); err != nil {
+		return
+	}
+	hostname := utils.GetRequestHostname(c.Request)
+	pushers := make([]interface{}, 0)
+	for _, pusher := range rtsp.Instance.GetPushers() {
+		port := pusher.Server().TCPPort
+		rtsp := fmt.Sprintf("rtsp://%s:%d%s", hostname, port, pusher.Path())
+		if port == 554 {
+			rtsp = fmt.Sprintf("rtsp://%s%s", hostname, pusher.Path())
+		}
+		if form.Q != "" && !strings.Contains(strings.ToLower(rtsp), strings.ToLower(form.Q)) {
+			continue
+		}
+		pushers = append(pushers, map[string]interface{}{
+			"rtspid":  pusher.ID(),
+			"name":    pusher.Name(),
+			"cuspath": pusher.Path(),
+			"rtspurl": pusher.Source(),
+			"onlines": len(pusher.GetPlayers()),
+		})
+	}
+	pr := utils.NewQueryResult(pushers)
 	c.IndentedJSON(200, pr)
 }
 

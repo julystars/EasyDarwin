@@ -1,0 +1,8 @@
+<service>
+    <id>EasyDarwin</id>
+    <name>EasyDarwin</name>
+    <description>小区监控摄像头拉流转发服务</description>
+    <executable>EasyDarwin.exe</executable>
+    <arguments></arguments>
+    <logmode>reset</logmode>
+</service>

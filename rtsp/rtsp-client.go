@@ -31,6 +31,7 @@ type RTSPClient struct {
 	URL                  string
 	Path                 string
 	CustomPath           string //custom path for pusher
+	DeviceName           string
 	ID                   string
 	Conn                 *RichConn
 	Session              string

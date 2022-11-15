@@ -33,6 +33,12 @@ type PageResult struct {
 	Rows  interface{} `json:"rows"`
 }
 
+type QueryResult struct {
+	Errcode int         `json:"errcode"`
+	Errmsg  string      `json:"errmsg"`
+	Data    interface{} `json:"data"`
+}
+
 func NewPageResult(rows interface{}) *PageResult {
 	v := reflect.ValueOf(rows)
 	if v.Kind() == reflect.Slice {
@@ -44,6 +50,23 @@ func NewPageResult(rows interface{}) *PageResult {
 		return &PageResult{
 			Total: 1,
 			Rows:  []interface{}{rows},
+		}
+	}
+}
+
+func NewQueryResult(rows interface{}) *QueryResult {
+	v := reflect.ValueOf(rows)
+	if v.Kind() == reflect.Slice {
+		return &QueryResult{
+			Errcode: 0,
+			Errmsg:  "success",
+			Data:    rows,
+		}
+	} else {
+		return &QueryResult{
+			Errcode: 0,
+			Errmsg:  "success",
+			Data:    rows,
 		}
 	}
 }
